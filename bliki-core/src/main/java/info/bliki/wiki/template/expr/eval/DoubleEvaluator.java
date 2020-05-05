@@ -119,8 +119,8 @@ public class DoubleEvaluator {
     static {
         SYMBOL_DOUBLE_MAP = new HashMap<>();
         FUNCTION_BOOLEAN_MAP = new HashMap<>();
-        SYMBOL_DOUBLE_MAP.put("E", new Double(Math.E));
-        SYMBOL_DOUBLE_MAP.put("Pi", new Double(Math.PI));
+        SYMBOL_DOUBLE_MAP.put("E", Math.E);
+        SYMBOL_DOUBLE_MAP.put("Pi", Math.PI);
 
         FUNCTION_BOOLEAN_MAP.put("And", new IBooleanBoolean2Function() {
             @Override

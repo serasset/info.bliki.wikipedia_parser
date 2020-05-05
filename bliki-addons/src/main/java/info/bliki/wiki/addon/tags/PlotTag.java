@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class PlotTag extends NowikiTag implements INoBodyParsingTag {
     private final static String HEADER1 = "<div id=\"plotter\">\n"
-            + "<a href=\"#\" id=\"showp\" onclick=\"$(\'plot\').show();$(\'hidep\').show();$(\'showp\').hide();\" />Show Plot</a> \n"
-            + "<a href=\"#\" style=\"display: none;\" id=\"hidep\" onclick=\"$(\'plot\').hide();$(\'hidep\').hide();$(\'showp\').show();\" />Hide Plot</a><br />\n";
+            + "<a href=\"#\" id=\"showp\" onclick=\"$('plot').show();$('hidep').show();$('showp').hide();\" />Show Plot</a> \n"
+            + "<a href=\"#\" style=\"display: none;\" id=\"hidep\" onclick=\"$('plot').hide();$('hidep').hide();$('showp').show();\" />Hide Plot</a><br />\n";
 
     private final static String HEADER2 = "<applet id=\"plot\" style=\"display: none;\" code=\"FuncPlotter\" width=\"910\" height=\"530\" codebase=\"../static/lib\" archive=\"funcplotter.jar,meparser.jar\">\n";
 
@@ -32,7 +32,7 @@ public class PlotTag extends NowikiTag implements INoBodyParsingTag {
 
         buf.append(HEADER1);
         buf.append(HEADER2);
-        String attValue = (String) tagAtttributes.get("xrange");
+        String attValue = tagAtttributes.get("xrange");
         if (attValue != null) {
             buf.append(" <param name=\"app.startup.xInterval\" value=\"");
             Utils.appendEscapedAttribute(buf, "xrange", tagAtttributes);
@@ -42,7 +42,7 @@ public class PlotTag extends NowikiTag implements INoBodyParsingTag {
             buf.append("-10, 10");
             buf.append("\"/>\n");
         }
-        attValue = (String) tagAtttributes.get("yrange");
+        attValue = tagAtttributes.get("yrange");
         if (attValue != null) {
             buf.append(" <param name=\"app.startup.yInterval\" value=\"");
             Utils.appendEscapedAttribute(buf, "yrange", tagAtttributes);
@@ -52,7 +52,7 @@ public class PlotTag extends NowikiTag implements INoBodyParsingTag {
             buf.append("-10, 10");
             buf.append("\"/>\n");
         }
-        attValue = (String) tagAtttributes.get("function");
+        attValue = tagAtttributes.get("function");
         if (attValue != null) {
             buf.append(" <param name=\"app.startup.function0\" value=\"");
             Utils.appendEscapedAttribute(buf, "function", tagAtttributes);

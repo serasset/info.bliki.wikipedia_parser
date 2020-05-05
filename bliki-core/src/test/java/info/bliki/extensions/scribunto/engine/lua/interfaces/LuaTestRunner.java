@@ -14,7 +14,7 @@ public class LuaTestRunner extends Runner {
 
     public LuaTestRunner(Class<? extends LuaTestBase> klass) throws Exception {
         this.klass = klass;
-        this.luaTest = klass.newInstance();
+        this.luaTest = klass.getDeclaredConstructor().newInstance();
     }
 
     @Override

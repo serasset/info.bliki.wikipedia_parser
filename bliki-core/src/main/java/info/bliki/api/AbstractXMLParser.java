@@ -5,8 +5,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -26,9 +28,12 @@ public abstract class AbstractXMLParser extends DefaultHandler {
     protected XMLReader fXMLReader;
     protected Reader fReader;
 
-    public AbstractXMLParser(String xmlText) throws SAXException {
+    public AbstractXMLParser(String xmlText) throws SAXException, ParserConfigurationException {
         super();
-        fXMLReader = XMLReaderFactory.createXMLReader();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser parser = factory.newSAXParser();
+        fXMLReader = parser.getXMLReader();
+        //fXMLReader = XMLReaderFactory.createXMLReader();
         fXMLReader.setContentHandler(this);
         fXMLReader.setErrorHandler(this);
         fReader = new StringReader(xmlText);

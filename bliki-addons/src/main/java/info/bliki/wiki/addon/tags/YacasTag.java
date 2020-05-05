@@ -32,16 +32,16 @@ public class YacasTag extends NowikiTag {
         Map<String, String> tagAtttributes = node.getAttributes();
 
         buf.append("\n");
-        String attValue = (String) tagAtttributes.get("init1");
+        String attValue = tagAtttributes.get("init1");
         if (attValue == null) {
-            buf.append("  <param name=\"init1\" value=\"Load(\'\'yacasinit.ys\'\')\">\n");
+            buf.append("  <param name=\"init1\" value=\"Load(''yacasinit.ys'')\">\n");
         } else {
             attValue = Utils.escapeXml(attValue, false, false, false);
             buf.append("  <param name=\"init1\" value=\"");
             buf.append(attValue);
             buf.append("\">\n");
         }
-        attValue = (String) tagAtttributes.get("init2");
+        attValue = tagAtttributes.get("init2");
         if (attValue == null) {
             buf.append("  <param name=\"init2\" value=\"TeXWrite(x):=WriteString(TeXForm(x));\">\n");
         } else {
@@ -50,18 +50,18 @@ public class YacasTag extends NowikiTag {
             buf.append(attValue);
             buf.append("\">\n");
         }
-        attValue = (String) tagAtttributes.get("init3");
+        attValue = tagAtttributes.get("init3");
         if (attValue == null) {
-            buf.append("  <param name=\"init3\" value=\"PrettyPrinter\'Set(\'\'TeXWrite\'\')\">\n");
+            buf.append("  <param name=\"init3\" value=\"PrettyPrinter'Set(''TeXWrite'')\">\n");
         } else {
             attValue = Utils.escapeXml(attValue, false, false, false);
             buf.append("  <param name=\"init3\" value=\"");
             buf.append(attValue);
             buf.append("\">\n");
         }
-        attValue = (String) tagAtttributes.get("history1");
+        attValue = tagAtttributes.get("history1");
         if (attValue == null) {
-            buf.append("  <param name=\"history1\" value=\"Write(\'\'$plot2d:pencolor 255 128 128 pensize 3.0 lines2d 4 1.0 1.0 2.0 2.0 3.0 5.0 4 4$\'\')\">\n");
+            buf.append("  <param name=\"history1\" value=\"Write(''$plot2d:pencolor 255 128 128 pensize 3.0 lines2d 4 1.0 1.0 2.0 2.0 3.0 5.0 4 4$'')\">\n");
         } else {
             attValue = Utils.escapeXml(attValue, false, false, false);
             buf.append("  <param name=\"history1\" value=\"");

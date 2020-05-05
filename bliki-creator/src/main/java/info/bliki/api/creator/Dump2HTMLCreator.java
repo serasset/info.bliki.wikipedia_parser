@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -80,18 +81,18 @@ public class Dump2HTMLCreator {
             if (mode == BOTH || mode == WRITE_HTML) {
                 secondPass(db, htmlDirectory, imageDirectory);
             }
-        } catch (SQLException | SAXException e) {
+        } catch (SQLException | SAXException | ParserConfigurationException e) {
             throw new IOException(e);
         }
     }
 
-    private void firstPass(WikiDB db) throws IOException, SAXException {
+    private void firstPass(WikiDB db) throws IOException, SAXException, ParserConfigurationException {
         System.out.println("First pass - write templates to database "+db);
         new WikiXMLParser(dumpFile, new InsertTemplateAndModuleFilter(db)).parse();
         System.out.println(' ');
     }
 
-    private void secondPass(WikiDB db, File htmlDirectory, @Nullable File imageDirectory) throws IOException, SAXException {
+    private void secondPass(WikiDB db, File htmlDirectory, @Nullable File imageDirectory) throws IOException, SAXException, ParserConfigurationException {
         System.out.println("Second pass - write HTML files to directory "+htmlDirectory);
         new WikiXMLParser(dumpFile, new RenderArticleFilter(db, htmlDirectory, imageDirectory)).parse();
         System.out.println(' ');

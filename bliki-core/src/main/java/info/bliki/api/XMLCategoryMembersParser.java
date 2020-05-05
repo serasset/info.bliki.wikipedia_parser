@@ -3,6 +3,7 @@ package info.bliki.api;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class XMLCategoryMembersParser extends AbstractXMLParser {
 
     private String cmContinue;
 
-    public XMLCategoryMembersParser(String xmlText) throws SAXException {
+    public XMLCategoryMembersParser(String xmlText) throws SAXException, ParserConfigurationException {
         super(xmlText);
         this.pagesList = new ArrayList<>();
         this.cmContinue = "";

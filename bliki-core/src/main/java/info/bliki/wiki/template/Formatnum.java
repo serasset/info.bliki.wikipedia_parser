@@ -32,7 +32,7 @@ public class Formatnum extends AbstractTemplateFunction {
                             result = num.toString();
                         }
                     } else {
-                        Double dbl = new Double(result);
+                        Double dbl = Double.valueOf(result);
                         // decimal number that will be rounded down by NumberFormat#format()?
                         if (result.endsWith(".")) {
                             DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(model.getLocale());

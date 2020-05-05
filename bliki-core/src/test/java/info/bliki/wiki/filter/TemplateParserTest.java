@@ -1840,6 +1840,6 @@ public class TemplateParserTest extends FilterTestSupport {
         TemplateParser templateParser = new TemplateParser("1:{{{1}}}2", false, true);
         templateParser.setModel(wikiModel);
         StringBuilder result = templateParser.replaceTemplateParameters(null, 0);
-        assertThat(result).isNull();
+        assertThat((CharSequence) result).isNull();
     }
 }
