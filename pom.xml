@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>info.bliki.wiki</groupId>
+    <groupId>info.bliki.wiki.getalp</groupId>
     <artifactId>bliki</artifactId>
     <packaging>pom</packaging>
     <name>Bliki POM</name>
@@ -28,10 +28,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://bitbucket.org/axelclk/info.bliki.wiki.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/axelclk/info.bliki.wiki.git</developerConnection>
+        <connection>scm:git:https://bitbucket.org/serasset/info.bliki.wiki.git</connection>
+        <developerConnection>scm:git:ssh://git@bitbucket.org/serasset/info.bliki.wiki.git</developerConnection>
         <tag>master</tag>
-        <url>https://bitbucket.org/axelclk/info.bliki.wiki/src</url>
+        <url>https://bitbucket.org/serasset/info.bliki.wiki/src</url>
     </scm>
 
     <issueManagement>
@@ -58,8 +58,8 @@
 
     <modules>
         <module>bliki-core</module>
-        <module>bliki-creator</module>
-        <module>bliki-addons</module>
+        <!--module>bliki-creator</module-->
+        <!--module>bliki-addons</module-->
     </modules>
 
     <properties>
@@ -70,7 +70,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>info.bliki.wiki</groupId>
+                <groupId>info.bliki.wiki.getalp</groupId>
                 <artifactId>bliki-core</artifactId>
                 <version>3.1.1-SNAPSHOT</version>
             </dependency>
