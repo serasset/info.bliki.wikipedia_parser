@@ -374,7 +374,7 @@
                         <artifactId>maven-release-plugin</artifactId>
                         <version>2.5.3</version>
                         <configuration>
-                            <branchName>release/@{project.version}</branchName>
+                            <branchName>release/${project.version}</branchName>
                         </configuration>
                     </plugin>
                 </plugins>
