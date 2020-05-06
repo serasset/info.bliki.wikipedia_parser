@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.bliki.wiki</groupId>
     <artifactId>bliki</artifactId>
     <packaging>pom</packaging>
     <name>Bliki POM</name>
-    <version>3.1.2G-SNAPSHOT</version>
+    <version>3.1.1-SNAPSHOT</version>
     <description>
         The Bliki API is a Java-based Wiki to HTML renderer with MediaWiki syntax support.
     </description>
@@ -72,7 +73,7 @@
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-core</artifactId>
-                <version>3.1.2G-SNAPSHOT</version>
+                <version>3.1.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
