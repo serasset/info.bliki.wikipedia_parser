@@ -4,7 +4,7 @@
     <artifactId>bliki</artifactId>
     <packaging>pom</packaging>
     <name>Bliki POM</name>
-    <version>3.1.1G</version>
+    <version>3.1.1-SNAPSHOT</version>
     <description>
         The Bliki API is a Java-based Wiki to HTML renderer with MediaWiki syntax support.
     </description>
@@ -30,7 +30,7 @@
     <scm>
         <connection>scm:git:https://bitbucket.org/serasset/info.bliki.wiki.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.org/serasset/info.bliki.wiki.git</developerConnection>
-        <tag>3.1.1G</tag>
+        <tag>release/@{project.version}</tag>
         <url>https://bitbucket.org/serasset/info.bliki.wiki/src</url>
     </scm>
 
@@ -72,7 +72,7 @@
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-core</artifactId>
-                <version>3.1.1G</version>
+                <version>3.1.1-SNAPSHOT</version>
             </dependency>
 
             <!--dependency>
