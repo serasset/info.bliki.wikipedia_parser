@@ -34,7 +34,7 @@ import info.bliki.wiki.tags.util.TagStack;
 import info.bliki.wiki.template.ITemplateFunction;
 import info.bliki.wiki.template.extension.AttributeList;
 import info.bliki.wiki.template.extension.AttributeRenderer;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
