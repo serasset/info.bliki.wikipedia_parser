@@ -15,12 +15,14 @@ function export.getByCode(frame)
 
 	local iargs = require("Module:parameters").process(frame.args, iparams)
 	local langcode = iargs[1]
-  print(langcode)
 
-	if langCode == "en" then
+
+	if langcode == "en" then
 	  return "English"
+	elseif langcode == "{{{1}}}" then
+	  return "PROBLEM(langcode passed without being substituded)"
 	else
-	  return "PROBLEM"
+	  return "OTHER PROBLEM"
 	end
 end
 
