@@ -64,4 +64,5 @@ public class ScribuntoLuaEngineIntegrationTest {
         assertThat(wikiModel.render(new HTMLConverter(), "Requests for example sentences in {{langname|en}}").trim())
             .isEqualTo("<p>Requests for example sentences in English</p>");
     }
+
 }
