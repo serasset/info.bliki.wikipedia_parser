@@ -65,4 +65,16 @@ public class ScribuntoLuaEngineIntegrationTest {
             .isEqualTo("<p>Requests for example sentences in English</p>");
     }
 
+    @Test public void test_getCurrentTitle() throws Exception {
+        wikiModel.setPageName("first");
+
+        assertThat(wikiModel.render(new PlainTextConverter(), "{{testtitle}}").trim())
+                .isEqualTo("Current Title = first");
+
+        wikiModel.setPageName("second");
+        assertThat(wikiModel.render(new PlainTextConverter(), "+ {{testtitle}}").trim())
+                .isEqualTo("+ Current Title = second");
+    }
+
+
 }
