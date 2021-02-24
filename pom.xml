@@ -28,10 +28,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://bitbucket.org/serasset/info.bliki.wiki.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/serasset/info.bliki.wiki.git</developerConnection>
+        <connection>scm:git:https://github.com/serasset/info.bliki.wikipedia_parser.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/serasset/info.bliki.wikipedia_parser.git</developerConnection>
         <tag>release/@{project.version}</tag>
-        <url>https://bitbucket.org/serasset/info.bliki.wiki/src</url>
+        <url>https://github.com/serasset/info.bliki.wikipedia_parser/src</url>
     </scm>
 
     <issueManagement>
