@@ -66,7 +66,7 @@ public class LaTeXConverter implements ITextConverter {
                         renderLaTeX(((HTMLTag) item), this, resultBuffer, model);
                     } else if (item instanceof TagNode) {
                         TagNode node = (TagNode) item;
-                        Map map = node.getObjectAttributes();
+                        Map<String, Object> map = node.getObjectAttributes();
                         if (map != null && map.size() > 0) {
                             Object attValue = map.get("wikiobject");
                             if (attValue instanceof ImageFormat) {
