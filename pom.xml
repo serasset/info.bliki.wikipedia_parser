@@ -78,19 +78,19 @@
             <!--dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-creator</artifactId>
-                <version>3.1.2G-SNAPSHOT</version>
+                <version>3.1.3G-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-addons</artifactId>
-                <version>3.1.2G-SNAPSHOT</version>
+                <version>3.1.3G-SNAPSHOT</version>
             </dependency-->
 
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.10</version>
+                <version>4.5.13</version>
             </dependency>
 
             <dependency>
@@ -102,7 +102,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.20</version>
+                <version>1.19</version>
             </dependency>
 
             <dependency>
@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.1.7</version>
+                <version>1.2.0</version>
                 <scope>test</scope>
             </dependency>
 
@@ -255,6 +255,17 @@
                 <version>1.9.5</version>
                 <configuration>
                     <connectionType>developerConnection</connectionType>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.6</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <serverId>sonatype-oss-staging</serverId>
                 </configuration>
             </plugin>
 
