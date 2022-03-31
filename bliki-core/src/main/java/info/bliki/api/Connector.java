@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.ProxySelector;
 import java.net.URI;
@@ -142,7 +143,7 @@ public class Connector {
                         break;
                     }
                 }
-            } catch (IOException | SAXException e) {
+            } catch (IOException | SAXException | ParserConfigurationException e) {
                 logger.error(null, e);
             } finally {
                 request.releaseConnection();
@@ -251,7 +252,7 @@ public class Connector {
         String response = sendXML(user, query);
         try {
             return parsePageBody(response).getPagesList();
-        } catch (SAXException | IOException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             logger.error(null, e);
         }
         return null;
@@ -275,7 +276,7 @@ public class Connector {
             if (responseBody != null) {
                 return parsePageBody(responseBody).getPagesList();
             }
-        } catch (IOException | SAXException e) {
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             logger.error(null, e);
         }
         // no pages parsed!?
@@ -373,7 +374,7 @@ public class Connector {
         return null;
     }
 
-    private XMLPagesParser parsePageBody(String responseBody) throws SAXException, IOException {
+    private XMLPagesParser parsePageBody(String responseBody) throws SAXException, IOException, ParserConfigurationException {
         XMLPagesParser parser = new XMLPagesParser(responseBody);
         parser.parse();
         List<String> warnings = parser.getWarnings();

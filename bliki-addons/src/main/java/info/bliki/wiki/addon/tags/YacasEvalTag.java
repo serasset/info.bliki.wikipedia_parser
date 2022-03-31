@@ -27,13 +27,13 @@ public class YacasEvalTag extends NowikiTag {
 
         String exprValue = tagAttributes.get("expr");
         if (exprValue == null) {
-            buf.append("<a href=\"javascript:yacasEval(\'NIL\');\">NIL</a>");
+            buf.append("<a href=\"javascript:yacasEval('NIL');\">NIL</a>");
             return;
         }
     exprValue = Utils.escapeXml(exprValue, false, false, false);
-        buf.append("<a href=\"javascript:yacasEval(\'");
+        buf.append("<a href=\"javascript:yacasEval('");
         buf.append(exprValue);
-        buf.append("\');\">");
+        buf.append("');\">");
 
         String titleValue = tagAttributes.get("title");
         if (titleValue == null) {

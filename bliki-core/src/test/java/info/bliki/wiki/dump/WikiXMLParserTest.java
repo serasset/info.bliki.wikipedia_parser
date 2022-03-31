@@ -4,6 +4,7 @@ import info.bliki.wiki.namespaces.Namespace;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +24,7 @@ public class WikiXMLParserTest {
         parse(getClass().getResource("/dump/enwiki-20150112-pages-articles1.xml.bz2"));
     }
 
-    private void parse(URL dump) throws IOException, SAXException {
+    private void parse(URL dump) throws IOException, SAXException, ParserConfigurationException {
         assertThat(dump).isNotNull();
 
         final List<WikiArticle> articles = new ArrayList<>();

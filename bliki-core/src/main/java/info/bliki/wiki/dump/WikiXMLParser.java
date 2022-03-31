@@ -6,8 +6,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,21 +50,20 @@ public class WikiXMLParser extends DefaultHandler {
 
     private IArticleFilter fArticleFilter;
 
-    public WikiXMLParser(File filename, IArticleFilter filter) throws IOException, SAXException {
+    public WikiXMLParser(File filename, IArticleFilter filter) throws IOException, SAXException, ParserConfigurationException {
         this(getReader(filename), filter);
     }
 
-    public WikiXMLParser(InputStream inputStream, IArticleFilter filter) throws SAXException {
-        fArticleFilter = filter;
-        fXMLReader = XMLReaderFactory.createXMLReader();
-        fXMLReader.setContentHandler(this);
-        fXMLReader.setErrorHandler(this);
-        fReader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
+    public WikiXMLParser(InputStream inputStream, IArticleFilter filter) throws SAXException, ParserConfigurationException {
+        this(new BufferedReader(new InputStreamReader(inputStream, UTF_8)), filter);
     }
 
-    public WikiXMLParser(Reader reader, IArticleFilter filter) throws SAXException {
+    public WikiXMLParser(Reader reader, IArticleFilter filter) throws SAXException, ParserConfigurationException {
         fArticleFilter = filter;
-        fXMLReader = XMLReaderFactory.createXMLReader();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser parser = factory.newSAXParser();
+        fXMLReader = parser.getXMLReader();
+        // fXMLReader = XMLReaderFactory.createXMLReader();
         fXMLReader.setContentHandler(this);
         fXMLReader.setErrorHandler(this);
         fReader = reader;

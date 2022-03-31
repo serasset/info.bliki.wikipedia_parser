@@ -14,3 +14,4 @@ littleproxy_*
 .fbprefs
 bin
 
+.DS_Store

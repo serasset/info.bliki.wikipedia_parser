@@ -4,7 +4,7 @@
     <artifactId>bliki</artifactId>
     <packaging>pom</packaging>
     <name>Bliki POM</name>
-    <version>3.1.1-SNAPSHOT</version>
+    <version>3.1.3G-SNAPSHOT</version>
     <description>
         The Bliki API is a Java-based Wiki to HTML renderer with MediaWiki syntax support.
     </description>
@@ -28,10 +28,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://bitbucket.org/axelclk/info.bliki.wiki.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/axelclk/info.bliki.wiki.git</developerConnection>
-        <tag>master</tag>
-        <url>https://bitbucket.org/axelclk/info.bliki.wiki/src</url>
+        <connection>scm:git:https://github.com/serasset/info.bliki.wikipedia_parser.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/serasset/info.bliki.wikipedia_parser.git</developerConnection>
+        <tag>release/@{project.version}</tag>
+        <url>https://github.com/serasset/info.bliki.wikipedia_parser/src</url>
     </scm>
 
     <issueManagement>
@@ -58,8 +58,8 @@
 
     <modules>
         <module>bliki-core</module>
-        <module>bliki-creator</module>
-        <module>bliki-addons</module>
+        <!--module>bliki-creator</module-->
+        <!--module>bliki-addons</module-->
     </modules>
 
     <properties>
@@ -72,20 +72,20 @@
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-core</artifactId>
-                <version>3.1.1-SNAPSHOT</version>
+                <version>3.1.3G-SNAPSHOT</version>
             </dependency>
 
-            <dependency>
+            <!--dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-creator</artifactId>
-                <version>3.1.1-SNAPSHOT</version>
+                <version>3.1.3G-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-addons</artifactId>
-                <version>3.1.1-SNAPSHOT</version>
-            </dependency>
+                <version>3.1.3G-SNAPSHOT</version>
+            </dependency-->
 
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -95,14 +95,14 @@
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.4</version>
+                <artifactId>commons-text</artifactId>
+                <version>1.8</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.21</version>
+                <version>1.19</version>
             </dependency>
 
             <dependency>
@@ -114,7 +114,7 @@
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
-                <version>10.13.1.1</version>
+                <version>10.15.2.0</version>
             </dependency>
 
             <dependency>
@@ -133,7 +133,7 @@
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.2</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -161,13 +161,26 @@
             <dependency>
                 <groupId>software.betamax</groupId>
                 <artifactId>betamax-junit</artifactId>
-                <version>2.0.0</version>
+                <version>2.0.1</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.4.0</version>
+            </extension>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>3.4.0</version>
+            </extension>
+        </extensions>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -181,7 +194,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -205,9 +218,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
+                <version>3.2.0</version>
                 <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <doclint>none</doclint>
+                    <source>8</source>
+                    <!--additionalparam>-Xdoclint:none</additionalparam-->
                 </configuration>
                 <executions>
                     <execution>
@@ -222,7 +237,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -237,7 +252,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
+                <version>1.9.5</version>
                 <configuration>
                     <connectionType>developerConnection</connectionType>
                 </configuration>
@@ -267,7 +282,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.9</version>
+                <version>0.8.5</version>
                 <executions>
                     <execution>
                         <goals>
@@ -286,22 +301,21 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <repository>
-            <id>sonatype-oss-staging</id>
-            <url>https://oss.sonatype.org/content/repositories/staging</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>sonatype-oss-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
-
     <profiles>
         <profile>
             <id>release</id>
+            <distributionManagement>
+                <repository>
+                    <id>sonatype-oss-staging</id>
+                    <url>https://oss.sonatype.org/content/repositories/staging</url>
+                </repository>
+
+                <snapshotRepository>
+                    <id>sonatype-oss-snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <uniqueVersion>false</uniqueVersion>
+                </snapshotRepository>
+            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
@@ -318,7 +332,82 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.6</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <serverId>sonatype-oss-staging</serverId>
+                        </configuration>
+                    </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>getalp</id>
+            <distributionManagement>
+                <repository>
+                    <id>getalp.repository</id>
+                    <name>Getalp Projects and third party repository</name>
+                    <url>scpexe://getalp.imag.fr/opt/www/m2</url>
+                </repository>
+                <site>
+                    <id>kaiko.getalp.org</id>
+                    <url>scpexe://getalp.imag.fr/opt/dbnary/static/reports/${project.version}/</url>
+                </site>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>3.8.1</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>3.0.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-site-plugin</artifactId>
+                            <version>3.9.0</version>
+                            <configuration>
+                                <outputEncoding>UTF-8</outputEncoding>
+                            </configuration>
+                            <dependencies>
+                                <dependency><!-- add support for ssh/scp -->
+                                    <groupId>org.apache.maven.wagon</groupId>
+                                    <artifactId>wagon-ssh-external</artifactId>
+                                    <version>3.4.0</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-deploy-plugin</artifactId>
+                            <version>2.8.2</version>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>

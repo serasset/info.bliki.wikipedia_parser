@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class PlotTag extends NowikiTag implements INoBodyParsingTag {
     private final static String HEADER1 = "<div id=\"plotter\">\n"
-            + "<a href=\"#\" id=\"showp\" onclick=\"$(\'plot\').show();$(\'hidep\').show();$(\'showp\').hide();\" />Show Plot</a> \n"
-            + "<a href=\"#\" style=\"display: none;\" id=\"hidep\" onclick=\"$(\'plot\').hide();$(\'hidep\').hide();$(\'showp\').show();\" />Hide Plot</a><br />\n";
+            + "<a href=\"#\" id=\"showp\" onclick=\"$('plot').show();$('hidep').show();$('showp').hide();\" />Show Plot</a> \n"
+            + "<a href=\"#\" style=\"display: none;\" id=\"hidep\" onclick=\"$('plot').hide();$('hidep').hide();$('showp').show();\" />Hide Plot</a><br />\n";
 
     private final static String HEADER2 = "<applet id=\"plot\" style=\"display: none;\" code=\"FuncPlotter\" width=\"910\" height=\"530\" codebase=\"../static/lib\" archive=\"funcplotter.jar,meparser.jar\">\n";
 

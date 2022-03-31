@@ -577,15 +577,15 @@ public class StringToTime extends Date {
 
                         if (hour != null) {
                             if (amOrPm != null)
-                                cal.set(Calendar.HOUR, new Integer(hour));
+                                cal.set(Calendar.HOUR, Integer.valueOf(hour));
                             else
-                                cal.set(Calendar.HOUR_OF_DAY, new Integer(hour));
+                                cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
                         } else
                             cal.set(Calendar.HOUR, 0);
 
-                        cal.set(Calendar.MINUTE, (min != null ? new Integer(min) : 0));
-                        cal.set(Calendar.SECOND, (sec != null ? new Integer(sec) : 0));
-                        cal.set(Calendar.MILLISECOND, (ms != null ? new Integer(ms) : 0));
+                        cal.set(Calendar.MINUTE, (min != null ? Integer.valueOf(min) : 0));
+                        cal.set(Calendar.SECOND, (sec != null ? Integer.valueOf(sec) : 0));
+                        cal.set(Calendar.MILLISECOND, (ms != null ? Integer.valueOf(ms) : 0));
 
                         if (amOrPm != null)
                             cal.set(Calendar.AM_PM, (amOrPm.equals("a") || amOrPm.equals("am") ? Calendar.AM : Calendar.PM));
@@ -597,7 +597,7 @@ public class StringToTime extends Date {
                     else if (type == FormatType.INCREMENT || type == FormatType.DECREMENT) {
                         Matcher units = unit.matcher(dateTimeString);
                         while (units.find()) {
-                            Integer val = new Integer(units.group(1)) * (type == FormatType.DECREMENT ? -1 : 1);
+                            Integer val = Integer.valueOf(units.group(1)) * (type == FormatType.DECREMENT ? -1 : 1);
                             String u = units.group(2);
 
                             // second
@@ -738,7 +738,7 @@ public class StringToTime extends Date {
 
                     // year
                     else if (type == FormatType.YEAR) {
-                        cal.set(Calendar.YEAR, new Integer(m.group(0)));
+                        cal.set(Calendar.YEAR, Integer.valueOf(m.group(0)));
                         return new Date(cal.getTimeInMillis());
                     }
 
