@@ -125,6 +125,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     }
 
     protected LuaValue loadFunction(String functionName, Prototype prototype, Frame frame) throws ScribuntoException {
+        Frame previous = currentFrame;
         try {
             currentFrame = frame;
             LuaValue function =  new LuaClosure(prototype, globals).checkfunction().call().get(functionName);
@@ -135,12 +136,13 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
         } catch (LuaError e) {
             throw new ScribuntoException(e);
         } finally {
-            currentFrame = null;
+            currentFrame = previous;
         }
     }
 
     protected String executeFunctionChunk(LuaValue luaFunction, Frame frame) {
         assertFunction(luaFunction);
+        Frame previous = currentFrame;
         try {
             currentFrame = frame;
             LuaValue executeFunction = globals.get("mw").get("executeFunction");
@@ -148,7 +150,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
             final LuaString result = executeFunction.call(luaFunction).checkstring();
             return new String(result.m_bytes, result.m_offset, result.m_length, UTF_8);
         } finally {
-            currentFrame = null;
+            currentFrame = previous;
         }
     }
 
