@@ -933,6 +933,11 @@ public class TemplateParser extends AbstractParser {
                         }
                     }
 
+                } else if (ch == '<' && peek(src, currOffset, endOffset, "nowiki>")) {
+                    int nowikiEnd = findString(src, currOffset+7, endOffset,"</nowiki>");
+                    if (nowikiEnd >= 0) {
+                        currOffset = nowikiEnd;
+                    }
                 } else if (ch == '=') {
                     if (!equalCharParsed) {
                         parameter = srcString.substring(lastOffset, currOffset - 1).trim();
@@ -1038,7 +1043,7 @@ public class TemplateParser extends AbstractParser {
      * @param templateParameters
      * @param curlyBraceOffset
      *          TODO
-     * @param template
+     *
      *
      * @return <code>null</code> if no replacement could be found
      */

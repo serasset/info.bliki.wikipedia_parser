@@ -655,6 +655,11 @@ public class WikipediaScanner {
                             currOffset = temp[0];
                         }
                     }
+                } else if (ch == '<' && peek(srcArray, currOffset, endOffset, "nowiki>")) {
+                    int nowikiEnd = findString(srcArray, currOffset+7, endOffset,"</nowiki>");
+                    if (nowikiEnd >= 0) {
+                        currOffset = nowikiEnd;
+                    }
                 } else if (ch == splitChar) {
                     if (maxParts > 0 && resultList.size() >= maxParts - 1) {
                         // take rest and put it into the last part
@@ -679,6 +684,40 @@ public class WikipediaScanner {
             }
         }
         return resultList;
+    }
+
+    /**
+     * check if the given string is a prefix of the srcArray
+     * @param sourceArray
+     * @param startOffset
+     * @param endOffset
+     * @param value
+     * @return
+     */
+    public static boolean peek(final char[] sourceArray, int startOffset, int endOffset,
+        String value) {
+        int l = 0; int offset = startOffset;
+        while (offset < endOffset && l < value.length() && value.charAt(l) == sourceArray[offset]) {
+            offset++; l++;
+        }
+        return l == value.length();
+    }
+
+    /**
+     * check if the given string is a prefix of the srcArray
+     * @param sourceArray
+     * @param startOffset
+     * @param endOffset
+     * @param value
+     * @return
+     */
+    public static int findString(final char[] sourceArray, int startOffset, int endOffset,
+        String value) {
+        int offset = startOffset;
+        while (offset < endOffset && !peek(sourceArray, offset, endOffset, value)) {
+            offset++;
+        }
+        return offset == endOffset ? -1 : offset + value.length();
     }
 
     /**
@@ -922,7 +961,7 @@ public class WikipediaScanner {
      * @param start
      *          The position at which to start scanning.
      * @return The parsed tag.
-     * @exception ParserException
+     * @exception IllegalStateException
      *              If a problem occurs reading from the source.
      */
     protected WikiTagNode parseTag(int start) {
@@ -1233,8 +1272,6 @@ public class WikipediaScanner {
      *          The ending point of the node.
      * @param attributes
      *          The attributes parsed from the tag.
-     * @exception ParserException
-     *              If the nodefactory creation of the tag node fails.
      * @return The new Tag node.
      */
     protected WikiTagNode makeTag(int start, int end, ArrayList<NodeAttribute> attributes) {
@@ -1367,7 +1404,7 @@ public class WikipediaScanner {
      * <code>testChar</code> is found. If <code>testChar</code> was found, return
      * the offset position.
      *
-     * @param testCh
+     * @param testChar
      *          the test character
      * @param fromIndex
      *          read from this offset

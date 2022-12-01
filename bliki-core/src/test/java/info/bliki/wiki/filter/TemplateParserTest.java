@@ -1842,4 +1842,15 @@ public class TemplateParserTest extends FilterTestSupport {
         StringBuilder result = templateParser.replaceTemplateParameters(null, 0);
         assertThat((CharSequence) result).isNull();
     }
+
+    @Test public void testNowikiProtectingPipesInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|<nowiki>arg with | inside</nowiki>|normal arg}}"))
+            .isEqualTo("a) First: <nowiki>arg with | inside</nowiki> Second: normal arg");
+    }
+
+    @Test public void testNowikiProtectingEqualsInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|<nowiki>arg with = inside</nowiki>|normal arg}}"))
+            .isEqualTo("a) First: <nowiki>arg with = inside</nowiki> Second: normal arg");
+    }
+
 }
