@@ -2,6 +2,7 @@ package info.bliki.wiki.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -909,12 +910,20 @@ public class TemplateParser extends AbstractParser {
             while (currOffset < endOffset) {
                 ch = src[currOffset++];
                 if (ch == '[' && src[currOffset] == '[') {
+                    // template parameter part is an internal link
                     currOffset++;
                     temp[0] = findNestedEnd(src, '[', ']', currOffset);
                     if (temp[0] >= 0) {
                         currOffset = temp[0];
                     }
+                } else if (ch == '[' && isValidExternalLinkProtocol(src, currOffset)) {
+                    //currOffset++;
+                    temp[0] = findNestedEndSingle(src, '[', ']', currOffset);
+                    if (temp[0] >= 0) {
+                        currOffset = temp[0];
+                    }
                 } else if (ch == '{' && src[currOffset] == '{') {
+                    // template parameter part is a template call
                     currOffset++;
                     if (src[currOffset] == '{' && src[currOffset + 1] != '{') {
                         currOffset++;
@@ -975,6 +984,55 @@ public class TemplateParser extends AbstractParser {
                 }
             }
         }
+    }
+
+    private static final char[][] protocols = new char[28][];
+    static {
+        protocols[0] = "bitcoin:".toCharArray();
+        protocols[1] = "ftp://".toCharArray();
+        protocols[2] = "ftps://".toCharArray();
+        protocols[3] = "geo:".toCharArray();
+        protocols[4] = "git://".toCharArray();
+        protocols[5] = "gopher://".toCharArray();
+        protocols[6] = "http://".toCharArray();
+        protocols[7] = "https://".toCharArray();
+        protocols[8] = "irc://".toCharArray();
+        protocols[9] = "ircs://".toCharArray();
+        protocols[10] = "magnet:".toCharArray();
+        protocols[11] = "mailto:".toCharArray();
+        protocols[12] = "mms://".toCharArray();
+        protocols[13] = "news:".toCharArray();
+        protocols[14] = "nntp://".toCharArray();
+        protocols[15] = "redis://".toCharArray();
+        protocols[16] = "sftp://".toCharArray();
+        protocols[17] = "sip:".toCharArray();
+        protocols[18] = "sips:".toCharArray();
+        protocols[19] = "sms:".toCharArray();
+        protocols[20] = "ssh://".toCharArray();
+        protocols[21] = "svn://".toCharArray();
+        protocols[22] = "tel:".toCharArray();
+        protocols[23] = "telnet://".toCharArray();
+        protocols[24] = "urn:".toCharArray();
+        protocols[25] = "worldwind://".toCharArray();
+        protocols[26] = "xmpp:".toCharArray();
+        protocols[27] = "//".toCharArray();
+    }
+
+    private static boolean isValidExternalLinkProtocol(char[] src, int currOffset) {
+        int i = 0;
+        while (i < protocols.length && ! isPrefix(protocols[i], src, currOffset)) {
+            i++;
+        }
+        return i != protocols.length;
+    }
+
+    private static boolean isPrefix(char[] prefix, char[] src, int currOffset) {
+        if (src.length - currOffset < prefix.length) return false;
+        int i = 0;
+        while (i < prefix.length && prefix[i] == src[currOffset+i]) {
+            i++;
+        }
+        return i == prefix.length;
     }
 
     /**

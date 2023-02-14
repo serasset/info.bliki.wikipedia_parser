@@ -1853,4 +1853,29 @@ public class TemplateParserTest extends FilterTestSupport {
             .isEqualTo("a) First: <nowiki>arg with = inside</nowiki> Second: normal arg");
     }
 
+    @Test public void testInternalLinkProtectingEqualsInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|[[wikipedia:Text]]|normal arg}}"))
+            .isEqualTo("a) First: [[wikipedia:Text]] Second: normal arg");
+    }
+
+
+    @Test public void testExternalLinkProtectingEqualsInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|[http://test.org/q=10]|normal arg}}"))
+            .isEqualTo("a) First: [http://test.org/q=10] Second: normal arg");
+    }
+
+    @Test public void testExternalLinkWithRelativeProtocolProtectingEqualsInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|[//test.org/q=10]|normal arg}}"))
+            .isEqualTo("a) First: [//test.org/q=10] Second: normal arg");
+    }
+
+    @Test public void testIncorrectProtocolNotProtectingEqualsInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|[fake://test.org/q=10]|normal arg|third}}"))
+            .isEqualTo("a) First: normal arg Second: third");
+    }
+
+    @Test public void testExternalLinkNoPipeAllowedInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|[http://test.org/q=10|not in uri]|normal arg}}"))
+            .isEqualTo("a) First: not in uri] Second: normal arg");
+    }
 }
