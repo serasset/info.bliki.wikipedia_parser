@@ -4,7 +4,7 @@
     <artifactId>bliki</artifactId>
     <packaging>pom</packaging>
     <name>Bliki POM</name>
-    <version>3.1.5G-SNAPSHOT</version>
+    <version>3.1.5G</version>
     <description>
         The Bliki API is a Java-based Wiki to HTML renderer with MediaWiki syntax support.
     </description>
@@ -72,37 +72,37 @@
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-core</artifactId>
-                <version>3.1.5G-SNAPSHOT</version>
+                <version>3.1.5G</version>
             </dependency>
 
             <!--dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-creator</artifactId>
-                <version>3.1.5G-SNAPSHOT</version>
+                <version>3.1.5G</version>
             </dependency>
 
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-addons</artifactId>
-                <version>3.1.5G-SNAPSHOT</version>
+                <version>3.1.5G</version>
             </dependency-->
 
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.13</version>
+                <version>4.5.14</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>1.8</version>
+                <version>1.10.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.19</version>
+                <version>1.22</version>
             </dependency>
 
             <dependency>
@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.0</version>
+                <version>1.2.11</version>
                 <scope>test</scope>
             </dependency>
 
