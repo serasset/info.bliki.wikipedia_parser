@@ -31,7 +31,7 @@ public class MwText implements MwInterface {
         return new OneArgFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                return NIL;
+                return arg;
             }
         };
     }
@@ -41,7 +41,7 @@ public class MwText implements MwInterface {
         return new OneArgFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                return NIL;
+                return arg;
             }
         };
     }
@@ -79,7 +79,7 @@ public class MwText implements MwInterface {
         return new OneArgFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                return NIL;
+                return arg;
             }
         };
     }
