@@ -292,7 +292,7 @@ public class TemplateFilterTest extends FilterTestSupport {
                 + "<th>Google Chrome</th></tr></table></div>\n"
                 + "<pre>"
                 + "<ol class=\"references\">\n"
-                + "<li id=\"_note-1\"><b><a href=\"#_ref-1\" title=\"\">&#8593;</a></b> John Resig. <i><a class=\"external text\" href=\"http://ejohn.org/blog/versions-of-javascript\" rel=\"nofollow\">Versions of JavaScript</a></i>. Ejohn.org. Abgerufen am May 2009.</li>\n"
+                + "<li id=\"_note-1\"><b><a href=\"#_ref-1\" title=\"\">&#8593;</a></b> John Resig. <i><a class=\"external text\" href=\"http://ejohn.org/blog/versions-of-javascript\" rel=\"nofollow\">Versions of JavaScript</a></i>. Ejohn.org. Abgerufen am 19 May 2009.</li>\n"
                 + "</ol>\n"
                 + "</pre>");
     }
@@ -682,7 +682,7 @@ public class TemplateFilterTest extends FilterTestSupport {
                 + "<td />\n"
                 + "<td /></tr></table></div>\n"
                 + "<ol class=\"references\">\n"
-                + "<li id=\"_note-1\"><b><a href=\"#_ref-1\" title=\"\">&#8593;</a></b> John Resig. <i><a class=\"external text\" href=\"http://ejohn.org/blog/versions-of-javascript\" rel=\"nofollow\">Versions of JavaScript</a></i>. Ejohn.org. Abgerufen am May 2009.</li>\n"
+                + "<li id=\"_note-1\"><b><a href=\"#_ref-1\" title=\"\">&#8593;</a></b> John Resig. <i><a class=\"external text\" href=\"http://ejohn.org/blog/versions-of-javascript\" rel=\"nofollow\">Versions of JavaScript</a></i>. Ejohn.org. Abgerufen am 19 May 2009.</li>\n"
                 + "</ol>");
     }
 
