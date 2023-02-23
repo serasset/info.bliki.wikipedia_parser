@@ -116,7 +116,7 @@ public class StringToTime extends Date {
       // TODO: ISO 8601 and derivatives
 
       // just the year
-      new PatternAndFormat(Pattern.compile("\\d{4}"), new Format(FormatType.YEAR)),
+      new PatternAndFormat(Pattern.compile("(?:c. +)?(\\d{4})[^\\d ]*"), new Format(FormatType.YEAR)),
 
       // e.g., October 26 and Oct 26
       new PatternAndFormat(Pattern.compile("([a-z]+) +(\\d{1,2})", Pattern.CASE_INSENSITIVE),
@@ -194,6 +194,10 @@ public class StringToTime extends Date {
       new PatternAndFormat(Pattern.compile("last +(.*)", Pattern.CASE_INSENSITIVE),
           new Format(FormatType.LAST)),
 
+      new PatternAndFormat(Pattern.compile(
+          "[+-]?\\d{4}-[01]\\d(-[0-3]\\d(T[0-2]\\d:[0-5]\\d:?([0-5]\\d(\\.\\d+)?)?(?:Z|[+-](?:2[0-3]|[01][0-9]):?[0-5][0-9])?)?)?"),
+          new Format(FormatType.ISO8601)),
+
       // compound statement
       new PatternAndFormat(
           Pattern.compile("(.+)(((\\+|\\-){1}.*)| +" + timeExpr + ")$", Pattern.CASE_INSENSITIVE),
@@ -206,12 +210,7 @@ public class StringToTime extends Date {
 
       // increment, e.g., +1 day
       new PatternAndFormat(Pattern.compile("\\+?( *\\d{1,} +[^ ]+){1,}", Pattern.CASE_INSENSITIVE),
-          new Format(FormatType.INCREMENT)),
-
-      new PatternAndFormat(Pattern.compile(
-          "[+-]?\\d{4}-[01]\\d(-[0-3]\\d(T[0-2]\\d:[0-5]\\d:?([0-5]\\d(\\.\\d+)?)?(?:Z|[+-](?:2[0-3]|[01][0-9]):?[0-5][0-9])?)?)?"),
-          new Format(FormatType.ISO8601))
-
+          new Format(FormatType.INCREMENT))
 
   };
 
@@ -770,7 +769,7 @@ public class StringToTime extends Date {
 
           // year
           else if (type == FormatType.YEAR) {
-            cal.set(Calendar.YEAR, Integer.valueOf(m.group(0)));
+            cal.set(Calendar.YEAR, Integer.valueOf(m.group(1)));
             return new Date(cal.getTimeInMillis());
           }
           // ISO8601

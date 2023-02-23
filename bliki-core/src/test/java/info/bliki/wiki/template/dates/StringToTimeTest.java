@@ -426,6 +426,22 @@ public class StringToTimeTest {
     assertThat((Date) date1).isEqualTo((Date) date2);
   }
 
+  @Test
+  public void testWiktionaryTimeStamp() throws Exception {
+    final Object date = StringToTime.date("2002-12-18T04:19:52");
+    assertThat(date).isInstanceOf(Date.class);
+  }
+
+  @Test
+  public void testCircaDate() throws Exception {
+    final Object date = StringToTime.date("c. 1380s");
+    assertThat(date).isInstanceOf(Date.class);
+    Date d = (Date) date;
+    Calendar ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(1380);
+
+  }
 
   private Date now() {
     return new Date(0);
