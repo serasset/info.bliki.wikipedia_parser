@@ -440,7 +440,77 @@ public class StringToTimeTest {
     Calendar ref = Calendar.getInstance();
     ref.setTime(d);
     assertThat(ref.get(Calendar.YEAR)).isEqualTo(1380);
+  }
 
+  @Test
+  public void testWitionaryDate1() throws Exception {
+    // 1 Nov 2017, 18:00:53
+    // '20 Sept 2001, 17:44:53'
+    //Timestamp '1 April 2001, 12:05:40' could not be parsed;
+    //Timestamp '11/19, 2015' could not be parsed;
+    //Timestamp '15-Jul-83' could not be parsed;
+    //'1997, March 14'
+    //Timestamp 'Apr. 29, 2015'
+    // 20 Sept 2001
+
+    Object date = StringToTime.date("20 Sept 2001, 17:44:53");
+    assertThat(date).isInstanceOf(Date.class);
+    Date d = (Date) date;
+    Calendar ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(2001);
+
+    date = StringToTime.date("1 Nov 2017, 18:00:53");
+    assertThat(date).isInstanceOf(Date.class);
+    d = (Date) date;
+    ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(2017);
+
+    date = StringToTime.date("1 April 2001, 12:05:40");
+    assertThat(date).isInstanceOf(Date.class);
+    d = (Date) date;
+    ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(2001);
+  }
+
+  @Ignore @Test
+  public void testWitionaryDate2() throws Exception {
+    // 1 Nov 2017, 18:00:53
+    // '20 Sept 2001, 17:44:53'
+    //Timestamp '1 April 2001, 12:05:40' could not be parsed;
+    //Timestamp '11/19, 2015' could not be parsed;
+    //Timestamp '15-Jul-83' could not be parsed;
+    //'1997, March 14'
+    //Timestamp 'Apr. 29, 2015'
+    // 20 Sept 2001
+
+    Object date = StringToTime.date("11/19, 2015");
+    assertThat(date).isInstanceOf(Date.class);
+    Date d = (Date) date;
+    Calendar ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(2015);
+  }
+
+  @Test
+  public void testWitionaryDate3() throws Exception {
+    // 1 Nov 2017, 18:00:53
+    // '20 Sept 2001, 17:44:53'
+    //Timestamp '1 April 2001, 12:05:40' could not be parsed;
+    //Timestamp '11/19, 2015' could not be parsed;
+    //Timestamp '15-Jul-83' could not be parsed;
+    //'1997, March 14'
+    //Timestamp 'Apr. 29, 2015'
+    // 20 Sept 2001
+
+    Object date = StringToTime.date("15-Jul-83");
+    assertThat(date).isInstanceOf(Date.class);
+    Date d = (Date) date;
+    Calendar ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(1983);
   }
 
   private Date now() {

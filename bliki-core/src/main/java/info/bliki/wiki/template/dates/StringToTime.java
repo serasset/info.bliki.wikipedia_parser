@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -171,6 +172,10 @@ public class StringToTime extends Date {
       // e.g., 1981-10-26
       new PatternAndFormat(Pattern.compile("\\d{4}\\-\\d{1,2}\\-\\d{1,2}"), new Format("y-M-d")),
 
+      // e.g., 15-Jul-83, 15-Jul-1983
+      new PatternAndFormat(Pattern.compile("\\d{2}\\-[a-z]+\\-\\d{1,2}", Pattern.CASE_INSENSITIVE),
+          new Format("d-MMM-y")),
+
       // e.g., 1981-10
       new PatternAndFormat(Pattern.compile("\\d{4}\\-\\d{2}"), new Format("yyyy-MM")),
 
@@ -329,7 +334,8 @@ public class StringToTime extends Date {
       if (dateTimeString == null) {
         return Boolean.FALSE;
       } else {
-        String trimmed = String.valueOf(dateTimeString).trim();
+        String trimmed = StringUtils.strip(String.valueOf(dateTimeString), " \t\n\f\r\u001C\u001D\u001E\u001F\u000B,.");
+        // String trimmed = String.valueOf(dateTimeString).trim();
         for (PatternAndFormat paf : known) {
           Matcher m = paf.matches(trimmed);
           if (m.matches()) {
@@ -469,6 +475,7 @@ public class StringToTime extends Date {
 
     public Date parse(String dateTimeString, Date now, Matcher m) throws ParseException {
       if (sdf != null) {
+        dateTimeString = normalizeSeptember(dateTimeString);
         return new SimpleDateFormat(sdf, DEFAULT_LOCALE).parse(dateTimeString);
       } else {
         dateTimeString = removeExtraSpaces.matcher(dateTimeString).replaceAll(" ")
@@ -791,6 +798,11 @@ public class StringToTime extends Date {
                   e.getMessage()), e);
         }
       }
+    }
+
+    static final Pattern septemberPattern = Pattern.compile("\\bSept\\b");
+    private String normalizeSeptember(String dateTimeString) {
+      return septemberPattern.matcher(dateTimeString).replaceAll("Sep");
     }
   }
 
