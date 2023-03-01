@@ -17,6 +17,7 @@ import info.bliki.extensions.scribunto.template.Frame;
 import info.bliki.wiki.filter.MagicWord;
 import info.bliki.wiki.filter.ParsedPageName;
 import info.bliki.wiki.model.IWikiModel;
+import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
 import info.bliki.wiki.template.ITemplateFunction;
 import info.bliki.wiki.template.namedargs.INamedArgsTemplateFunction;
 import info.bliki.wiki.template.namedargs.NamedArgs;
@@ -170,6 +171,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
         stubTitleBlacklist();
         stubExecuteModule();
         stubWikiBase();
+        stubRequire();
     }
 
     private void stubTitleBlacklist() {
@@ -242,6 +244,67 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
         });
         mw.set("wikibase", wikibase);
     }
+
+    private final static String _REQUIRE = "_default_require";
+    private void stubRequire() {
+        final LuaValue require = globals.get("require");
+        globals.set(_REQUIRE, require);
+        globals.set("require", requireStub());
+    }
+
+    private LuaValue requireStub() {
+        return new OneArgFunction() {
+            @Override public LuaValue call(LuaValue modname) {
+                assert_(modname.isstring(),
+                    String.format("bad argument #1 to 'require' (string expected, got %s)",
+                        modname.typename()));
+                String name = modname.checkjstring();
+                ParsedPageName pageName = pageNameForModule(name, model.getNamespace().getMain());
+                if (pageName.namespace.isType(NamespaceCode.MODULE_NAMESPACE_KEY)) {
+                    LuaValue init = loadModule(pageName);
+                    if (init.isnil()) {
+                        return NIL;
+                    } else {
+                        globals.get("setfenv").checkfunction().call(init, globals);
+                        LuaValue actual_arg = globals.get("arg");
+                        LuaTable arg = new LuaTable();
+                        arg.insert(0, modname);
+                        globals.set("arg", arg);
+                        LuaValue res = init.checkfunction().call(modname);
+                        globals.set("arg", actual_arg);
+                        return res;
+                    }
+                } else {
+                    return globals.get(_REQUIRE).call(modname);
+                }
+            }
+        };
+    }
+
+    // function _G.require (modname)
+    //	assert (type(modname) == "string", format (
+    //		"bad argument #1 to 'require' (string expected, got %s)", type(modname)))
+    //	local p = _LOADED[modname]
+    //	if p then -- is it there?
+    //		if p == sentinel then
+    //			error (format ("loop or previous error loading module '%s'", modname))
+    //		end
+    //		return p -- package is already loaded
+    //	end
+    //	local init = load (modname, _LOADERS)
+    //	_LOADED[modname] = sentinel
+    //	local actual_arg = _G.arg
+    //	_G.arg = { modname }
+    //	local res = init (modname)
+    //	if res then
+    //		_LOADED[modname] = res
+    //	end
+    //	_G.arg = actual_arg
+    //	if _LOADED[modname] == sentinel then
+    //		_LOADED[modname] = true
+    //	end
+    //	return _LOADED[modname]
+    //end
 
     private void load(MwInterface luaInterface) throws IOException {
         final String filename = fileNameForInterface(luaInterface);
