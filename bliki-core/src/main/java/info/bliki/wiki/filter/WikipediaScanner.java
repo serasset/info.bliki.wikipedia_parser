@@ -7,6 +7,7 @@ import info.bliki.wiki.tags.util.WikiTagNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class WikipediaScanner {
     public static final int EOF = -1;
@@ -720,6 +721,34 @@ public class WikipediaScanner {
         return offset == endOffset ? -1 : offset + value.length();
     }
 
+    public static int passEventualElement(final char[] sourceArray, int startOffset, int endOffset,
+        final Set<String> knownTags) {
+        int offset = startOffset;
+        while(offset < endOffset && Character.isJavaIdentifierPart(sourceArray[offset])) {
+            offset++;
+        }
+        if (knownTags.contains(String.valueOf(sourceArray, startOffset, offset-startOffset))) {
+            while(offset < endOffset && sourceArray[offset] != '>') {
+                if (sourceArray[offset] == '"') {
+                    offset++;
+                    while(offset < endOffset && sourceArray[offset] != '"') offset++;
+                } else if (sourceArray[offset] == '\'') {
+                    offset++;
+                    while(offset < endOffset && sourceArray[offset] != '\'') offset++;
+                }
+                offset++;
+            }
+            if (offset == endOffset) {
+                // this is not a valid HTML Tag, do not advance anymore
+                return startOffset;
+            } else {
+                return ++offset;
+            }
+        } else {
+            return offset;
+        }
+    }
+
     /**
      * Read until the end of a nested block i.e. something like
      * <code>[[...[[  ]]...]]</code>
@@ -728,7 +757,7 @@ public class WikipediaScanner {
      * @param startCh
      * @param endChar
      * @param startPosition
-     * @return the position of the nested end charcters or <code>-1</code> if not
+     * @return the position of the nested end characters or <code>-1</code> if not
      *         found
      */
     public static int findNestedEnd(final char[] sourceArray, final char startCh, final char endChar, int startPosition) {

@@ -1878,4 +1878,24 @@ public class TemplateParserTest extends FilterTestSupport {
         assertThat(wikiModel.parseTemplates("{{Test|[http://test.org/q=10|not in uri]|normal arg}}"))
             .isEqualTo("a) First: not in uri] Second: normal arg");
     }
+
+    @Test public void testHTMLTagInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|<span class=\"toto\">toto</span>|normal arg}}"))
+            .isEqualTo("a) First: <span class=\"toto\">toto</span> Second: normal arg");
+    }
+
+    @Test public void testHTMLTagSimpleQuoteInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|<span class='toto'>toto</span>|normal arg}}"))
+            .isEqualTo("a) First: <span class='toto'>toto</span> Second: normal arg");
+    }
+
+    @Test public void testNonHTMLTagInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|<fake class='toto'>toto|normal arg|third}}"))
+            .isEqualTo("a) First: normal arg Second: third");
+    }
+
+    @Test public void testInvalidHTMLTagInParameters() {
+        assertThat(wikiModel.parseTemplates("{{Test|<span class='toto'|normal arg|third}}"))
+            .isEqualTo("a) First: normal arg Second: third");
+    }
 }

@@ -1,17 +1,7 @@
 package info.bliki.wiki.filter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static info.bliki.wiki.filter.AbstractWikipediaParser.getRedirectedTemplateContent;
+import static info.bliki.wiki.filter.WikipediaParser.parseRedirect;
 
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
@@ -20,11 +10,15 @@ import info.bliki.wiki.tags.util.WikiTagNode;
 import info.bliki.wiki.template.ITemplateFunction;
 import info.bliki.wiki.template.Safesubst;
 import info.bliki.wiki.template.Subst;
-
-import static info.bliki.wiki.filter.AbstractWikipediaParser.getRedirectedTemplateContent;
-import static info.bliki.wiki.filter.TemplateParser.createSingleParameter;
-import static info.bliki.wiki.filter.TemplateParser.mergeParameters;
-import static info.bliki.wiki.filter.WikipediaParser.parseRedirect;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A template parser for the first pass in the parsing of a Wikipedia text
@@ -946,6 +940,11 @@ public class TemplateParser extends AbstractParser {
                     int nowikiEnd = findString(src, currOffset+7, endOffset,"</nowiki>");
                     if (nowikiEnd >= 0) {
                         currOffset = nowikiEnd;
+                    }
+                } else if (ch == '<') {
+                    int safeAdvance = passEventualElement(src, currOffset, endOffset, wikiModel.getTokenMap().keySet());
+                    if (safeAdvance >= 0) {
+                        currOffset = safeAdvance;
                     }
                 } else if (ch == '=') {
                     if (!equalCharParsed) {
