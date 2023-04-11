@@ -41,6 +41,7 @@ public class MwTitle implements MwInterface {
         table.set("protectionLevels", protectionLevels());
         table.set("cascadingProtection", cascadingProtection());
         table.set("getCurrentTitle", getCurrentTitle());
+        table.set("recordVaryFlag", recordVaryFlag());
         return table;
     }
 
@@ -213,7 +214,21 @@ public class MwTitle implements MwInterface {
         };
     }
 
-
+    private LuaValue recordVaryFlag() {
+        return new TwoArgFunction() {
+            /**
+             * Record a ParserOutput flag when the current title is accessed
+             *
+             * @param text
+             * @param flag
+             * @return array
+             */
+            @Override
+            public LuaValue call(LuaValue text, LuaValue flag) {
+                return new LuaTable();
+            }
+        };
+    }
 
     private LuaValue title(String namespace, String pageName) {
         return title(

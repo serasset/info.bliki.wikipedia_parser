@@ -28,10 +28,10 @@ public class MwText implements MwInterface {
     // Replaces MediaWiki <nowiki> strip markers with the corresponding text.
     // Other types of strip markers are not changed.
     private LuaValue unstripNoWiki() {
-        return new OneArgFunction() {
+        return new TwoArgFunction() {
             @Override
-            public LuaValue call(LuaValue arg) {
-                return arg;
+            public LuaValue call(LuaValue s, LuaValue getOrigTextWhenPreprocessing) {
+                return s;
             }
         };
     }
