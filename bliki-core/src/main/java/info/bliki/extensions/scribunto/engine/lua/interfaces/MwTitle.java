@@ -1,6 +1,7 @@
 package info.bliki.extensions.scribunto.engine.lua.interfaces;
 
 import info.bliki.wiki.model.IWikiModel;
+import org.luaj.vm2.LuaInteger;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
@@ -141,11 +142,15 @@ public class MwTitle implements MwInterface {
              */
             @Override
             public LuaValue call(LuaValue text_or_id, LuaValue defaultNamespace) {
-                if (text_or_id.isnumber()) {
+                // "-" is considered as a number by Lua... so check the type rather than the value
+                if (text_or_id.type() == TNUMBER) {
                     // no database lookup
                     return new LuaTable();
                 } else if (text_or_id.isstring()) {
                     if (isValidTitle(text_or_id, defaultNamespace)) {
+                        if (defaultNamespace.isnil()) {
+                            defaultNamespace = LuaInteger.valueOf(0);
+                        }
                         return title(
                             defaultNamespace,
                             text_or_id,

@@ -1,5 +1,8 @@
 package info.bliki.wiki.filter;
 
+import info.bliki.extensions.scribunto.engine.ScribuntoEngine;
+import info.bliki.extensions.scribunto.engine.lua.CompiledScriptCache;
+import info.bliki.extensions.scribunto.engine.lua.ScribuntoLuaEngine;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.Utils;
@@ -30,6 +33,9 @@ public class WikiTestModel extends WikiModel {
     static {
         TagNode.addAllowedAttribute("style");
     }
+
+    private CompiledScriptCache compiledScriptCache = new CompiledScriptCache();
+    private ScribuntoLuaEngine fScribuntoEngine;
 
     private static Configuration getTestConfiguration() {
         Configuration configuration = new Configuration();
@@ -160,5 +166,12 @@ public class WikiTestModel extends WikiModel {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    @Override
+    public ScribuntoEngine createScribuntoEngine() {
+        if (null == fScribuntoEngine)
+            fScribuntoEngine = new ScribuntoLuaEngine(this, compiledScriptCache, true);
+        return fScribuntoEngine;
     }
 }

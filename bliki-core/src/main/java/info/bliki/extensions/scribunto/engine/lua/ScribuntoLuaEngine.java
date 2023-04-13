@@ -18,14 +18,24 @@ import info.bliki.extensions.scribunto.template.Frame;
 import info.bliki.wiki.filter.MagicWord;
 import info.bliki.wiki.filter.ParsedPageName;
 import info.bliki.wiki.model.IWikiModel;
+import info.bliki.wiki.namespaces.INamespace.INamespaceValue;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
+import info.bliki.wiki.namespaces.Namespace;
+import info.bliki.wiki.namespaces.Namespace.NamespaceValue;
 import info.bliki.wiki.template.ITemplateFunction;
 import info.bliki.wiki.template.namedargs.INamedArgsTemplateFunction;
 import info.bliki.wiki.template.namedargs.NamedArgs;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaClosure;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaFunction;
+import org.luaj.vm2.LuaInteger;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -64,6 +74,8 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
   private Frame currentFrame;
   private Map<String, Frame> childFrames = new HashMap<>();
   private int expensiveFunctionCount;
+
+  private int executeFunctionDepth = 0;
 
   private final CompiledScriptCache compiledScriptCache;
   private final MwInterface[] interfaces;
@@ -136,12 +148,15 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     Frame previous = currentFrame;
     try {
       currentFrame = frame;
-      LuaValue function = new LuaClosure(prototype, globals).checkfunction().call()
-          .get(functionName);
-      if (function.isnil()) {
-        throw new ScribuntoException("no such function '" + functionName + "'");
+      // LuaValue function = new LuaClosure(prototype, globals).checkfunction().call()
+      //     .get(functionName);
+      VarArgFunction executeModule = executeModuleStub();
+      Varargs pair = executeModule.invoke(LuaValue.varargsOf(new LuaClosure(prototype, globals).checkfunction(),
+          LuaString.valueOf(functionName), LuaValue.NIL));
+      if (! pair.arg1().checkboolean()) {
+        throw new ScribuntoException("Failed to load function '" + functionName + "'");
       }
-      return function;
+      return pair.arg(2);
     } catch (LuaError e) {
       throw new ScribuntoException(e);
     } finally {
@@ -204,26 +219,125 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
   private void stubExecuteModule() {
     // don't need module isolation
     final LuaValue mw = globals.get("mw");
-    mw.set("executeModule", new VarArgFunction() {
+    mw.set("executeModule", executeModuleStub());
+    mw.set("executeFunction", executeFunctionStub());
+  }
+
+  private VarArgFunction executeModuleStub() {
+    return new VarArgFunction() {
       @Override
       public Varargs invoke(Varargs args) {
         LuaFunction chunk = args.arg(1).checkfunction();
         LuaValue name = args.arg(2);
+        LuaValue frame = args.arg(3);
+        final LuaValue mw = globals.get("mw");
 
+        if (frame.isnil()) {
+          LuaValue newFrame = mw.get("_newFrame");
+          frame = newFrame.call(LuaString.valueOf("current"), LuaString.valueOf("parent"));
+        }
+        LuaValue oldGetCurrentFrame = mw.get("getCurrentFrame");
+        LuaValue finalFrame = frame;
+        mw.set("getCurrentFrame", new ZeroArgFunction() {
+          @Override
+          public LuaValue call() {
+            return finalFrame;
+          }
+        });
         final LuaValue res = chunk.call();
-
+        Varargs finalResult;
         if (name.isnil()) {
-          return LuaValue.varargsOf(new LuaValue[]{LuaValue.TRUE, res});
+          finalResult = LuaValue.varargsOf(new LuaValue[]{LuaValue.TRUE, res});
         } else {
           if (!res.istable()) {
-            return LuaValue.varargsOf(new LuaValue[]{FALSE, toLuaString(res.typename())});
+            finalResult = LuaValue.varargsOf(new LuaValue[]{FALSE, toLuaString(res.typename())});
           } else {
-            return LuaValue.varargsOf(new LuaValue[]{LuaValue.TRUE, res.checktable().get(name)});
+            finalResult = LuaValue.varargsOf(new LuaValue[]{LuaValue.TRUE, res.checktable().get(name)});
           }
         }
+        // ugly hacks install a metatable that gets executed and need the getCurrentFrame() method
+        // to be set when calling res.get(name)
+        mw.set("getCurrentFrame", oldGetCurrentFrame);
+        return finalResult;
       }
-    });
+    };
   }
+
+  private OneArgFunction executeFunctionStub() {
+    return new OneArgFunction() {
+      @Override
+      public LuaValue call(LuaValue chunk) {
+        final LuaValue mw = globals.get("mw");
+        LuaValue newFrame = mw.get("_newFrame");
+        LuaValue frame = newFrame.call(LuaString.valueOf("current"), LuaString.valueOf("parent"));
+
+        LuaValue oldGetCurrentFrame = mw.get("getCurrentFrame");
+        LuaValue finalFrame = frame;
+        mw.set("getCurrentFrame", new ZeroArgFunction() {
+          @Override
+          public LuaValue call() {
+            return finalFrame;
+          }
+        });
+        if (executeFunctionDepth == 0) {
+          globals.get("math").get("randomseed").checkfunction().call(LuaInteger.valueOf(1));
+        }
+        executeFunctionDepth++;
+        final LuaValue res = chunk.call(frame);
+        StringBuilder buf = new StringBuilder();
+        if (res.istable()) {
+          LuaTable table = res.checktable();
+          LuaValue k = LuaValue.NIL;
+          while (true) {
+            Varargs n = table.next(k);
+            if ((k = n.arg1()).isnil()) {
+              break;
+            }
+            LuaValue v = n.arg(2);
+            buf.append(v.tojstring());
+          }
+        } else if (! res.isnil()) {
+          buf.append(res.tojstring());
+        }
+
+        executeFunctionDepth--;
+        mw.set("getCurrentFrame", oldGetCurrentFrame);
+        return LuaString.valueOf(buf.toString());
+      }
+    };
+  }
+
+  // function mw.executeFunction( chunk )
+  //	local getCurrentFrame = getfenv( chunk ).mw.getCurrentFrame
+  //	local frame
+  //	if getCurrentFrame then
+  //		-- Normal case
+  //		frame = getCurrentFrame()
+  //	else
+  //		-- If someone assigns a built-in method to the module's return table,
+  //		-- its env won't have mw.getCurrentFrame()
+  //		frame = newFrame( 'current', 'parent' )
+  //	end
+  //
+  //	if executeFunctionDepth == 0 then
+  //		-- math.random is defined as using C's rand(), and C's rand() uses 1 as
+  //		-- a seed if not explicitly seeded. So reseed with 1 for each top-level
+  //		-- #invoke to avoid people passing state via the RNG.
+  //		math.randomseed( 1 )
+  //	end
+  //	executeFunctionDepth = executeFunctionDepth + 1
+  //
+  //	local results = { chunk( frame ) }
+  //
+  //	local stringResults = {}
+  //	for i, result in ipairs( results ) do
+  //		stringResults[i] = tostring( result )
+  //	end
+  //
+  //	executeFunctionDepth = executeFunctionDepth - 1
+  //
+  //	return table.concat( stringResults )
+  //end
 
   private void stubWikiBase() {
     // fake https://www.mediawiki.org/wiki/Extension:Wikibase
@@ -495,6 +609,10 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
       frame = currentFrame;
     } else if (childFrames.containsKey(frameId)) {
       frame = childFrames.get(frameId);
+    } else if (frameId.equals("empty")) {
+      frame = new Frame(
+          ParsedPageName.parsePageName(model, frameId, model.getNamespace().getModule(), false, false),
+          new HashMap<>(), null, false);
     }
     if (frame == null) {
       throw new AssertionError("No frame set: " + luaFrameId);
@@ -638,7 +756,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
         return f;
       }
     });
-    globals.set("gefenv", new OneArgFunction() {
+    globals.set("getfenv", new OneArgFunction() {
       public LuaValue call(LuaValue f) {
         return globals;
       }
@@ -733,8 +851,34 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
       this.delegate = delegate;
     }
 
+    private InputStream patchMw(InputStream is) {
+      assert is != null;
+      try {
+        // Patch the mw.lua code to expose the newFrame local method (for use in execute stubs
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        for (int length; (length = is.read(buffer)) != -1; ) {
+          result.write(buffer, 0, length);
+        }
+        StringBuilder mwLuaCode = new StringBuilder(result.toString("UTF-8"));
+        int returnPos = mwLuaCode.lastIndexOf("return mw");
+        mwLuaCode.replace(returnPos, returnPos + "return mw".length(), "mw._newFrame = newFrame\n\nreturn mw");
+        return new ByteArrayInputStream(mwLuaCode.toString().getBytes());
+      } catch (IOException e) {
+        return null;
+      }
+    }
+
     @Override
     public InputStream findResource(String filename) {
+      InputStream resource = originalFindResource(filename);
+      if (null != resource && "mw.lua".equals(filename))
+        return patchMw(resource);
+      else
+        return resource;
+    }
+
+    public InputStream originalFindResource(String filename) {
       for (String path : LIBRARY_PATH) {
         InputStream is = delegate.findResource(path + "/" + filename);
         if (is != null) {
