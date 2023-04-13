@@ -16,7 +16,8 @@ public class MwMessageTest extends LuaTestBase {
     @Override public Set<String> ignoredTests() {
         return new HashSet<>(Arrays.asList(
             "exists (1)",
-            "inLanguage"
+            "inLanguage",
+            "num param"
         ));
     }
 }

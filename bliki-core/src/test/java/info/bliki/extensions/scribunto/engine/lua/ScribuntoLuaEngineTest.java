@@ -31,7 +31,7 @@ public class ScribuntoLuaEngineTest {
     @Before public void setUp() throws Exception {
         initMocks(this);
         when(model.getNamespace()).thenReturn(new Namespace());
-        subject = new ScribuntoLuaEngine(model, CompiledScriptCache.DONT_CACHE);
+        subject = new ScribuntoLuaEngine(model, CompiledScriptCache.DONT_CACHE, true);
     }
 
     @Test public void testFetchModuleFromParserContainingTemplatePrefix() throws Exception {
