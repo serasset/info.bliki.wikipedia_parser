@@ -17,6 +17,7 @@ import info.bliki.extensions.scribunto.engine.lua.interfaces.MwUstring;
 import info.bliki.extensions.scribunto.template.Frame;
 import info.bliki.wiki.filter.MagicWord;
 import info.bliki.wiki.filter.ParsedPageName;
+import info.bliki.wiki.filter.TemplateParser;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.namespaces.INamespace.INamespaceValue;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
@@ -481,9 +482,16 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
       @Override
       public LuaValue call(LuaValue frameId, LuaValue function, LuaValue args) {
         final String functionName = function.checkjstring();
-
+        String infuncArg = null;
         if (functionName.startsWith("#")) {
-          final ITemplateFunction templateFunction = model.getTemplateFunction(functionName);
+          ITemplateFunction templateFunction = model.getTemplateFunction(functionName);
+          if (templateFunction == null) {
+            int offset = TemplateParser.checkParserFunction(functionName);
+            if (offset > 0) {
+              templateFunction = model.getTemplateFunction(functionName.substring(0, offset - 1));
+              infuncArg = functionName.substring(offset);
+            }
+          }
           if (templateFunction != null) {
             LuaTable arguments = args.checktable();
 
@@ -502,6 +510,9 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
 
             // Otherwise case, the function is invoked with only a listed arguments.
             List<String> parts = new ArrayList<>();
+            if (null != infuncArg) {
+              parts.add(infuncArg);
+            }
             for (int i = 1; i <= arguments.length(); i++) {
               parts.add(arguments.get(i).checkjstring());
             }

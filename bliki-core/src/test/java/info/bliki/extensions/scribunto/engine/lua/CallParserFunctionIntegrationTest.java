@@ -101,4 +101,23 @@ public class CallParserFunctionIntegrationTest {
         String actual = wikiModel.render(source);
         assertThat(actual).contains(expected);
     }
+
+    /**
+     * This test expects the below process flow;
+     * <code>
+     *      "{{named-args}}"
+     *     --> wikitestModel/templates/named-args
+     *     --> wikitestModel/modules/named-args-caller.lua
+     *     --> wikitestModel/modules/parser-function-caller.lua
+     *     --> ScribuntoLuaEngine#callParserFunction()
+     *     --> NamedArgsTestFunction#parseFunction(namedArgsObject)
+     * </code>
+     */
+    @Test
+    public void tagParserFunctionTest() throws IOException {
+        String source = "{{tag-parser-function}}";
+        String expected = "<b>bold</b>";
+        String actual = wikiModel.render(source);
+        assertThat(actual).contains(expected);
+    }
 }
