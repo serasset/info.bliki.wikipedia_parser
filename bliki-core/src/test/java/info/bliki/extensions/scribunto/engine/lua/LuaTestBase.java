@@ -21,6 +21,7 @@ import static org.luaj.vm2.LuaInteger.valueOf;
 
 @RunWith(LuaTestRunner.class)
 public abstract class LuaTestBase {
+
     private ScribuntoLuaEngine scribuntoLuaEngine;
     private LuaTable tests;
 
@@ -35,8 +36,16 @@ public abstract class LuaTestBase {
     }
 
     public void setUp() throws IOException {
-        scribuntoLuaEngine = new ScribuntoLuaEngine(new WikiModel("${image}", "${title}"), CompiledScriptCache.DONT_CACHE);
+        scribuntoLuaEngine = getScribuntoLuaEngine();
         tests    = loadTests();
+    }
+
+    protected ScribuntoLuaEngine getScribuntoLuaEngine() {
+        return new ScribuntoLuaEngine(getWikiModel(), CompiledScriptCache.DONT_CACHE);
+    }
+
+    protected WikiModel getWikiModel() {
+        return new WikiModel("${image}", "${title}");
     }
 
     public void runTests(RunNotifier notifier)  {
@@ -71,15 +80,11 @@ public abstract class LuaTestBase {
     }
 
     private LuaTable loadTests() throws IOException {
-        InputStream is = null;
-        try {
-            is = globals().finder.findResource(getLuaTest());
+        try (InputStream is = globals().finder.findResource(getLuaTest())) {
             if (is == null) {
-                throw new IOException("test "+getLuaTest()+ " not found");
+                throw new IOException("test " + getLuaTest() + " not found");
             }
             return globals().load(is, getLuaTest(), "t", globals()).call().checktable();
-        } finally {
-            if (is != null) is.close();
         }
     }
 
