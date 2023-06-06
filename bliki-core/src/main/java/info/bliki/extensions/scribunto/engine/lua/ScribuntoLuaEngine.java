@@ -71,6 +71,9 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
 
   private static final int MAX_EXPENSIVE_CALLS = 10;
   private static final boolean ENABLE_LUA_DEBUG_LIBRARY = false;
+  private final static String EXPOSED_NEW_FRAME = "_exposed_newFrame";
+  private final static String EXPOSED_LOADED_DATA = "_exposed_loadedData";
+
   private final Globals globals;
   private Frame currentFrame;
   private Map<String, Frame> childFrames = new HashMap<>();
@@ -89,6 +92,8 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     this(model, cache, debug ? JsePlatform.debugGlobals() : JsePlatform.standardGlobals());
   }
 
+  // TODO: expose all cache tables from Scribunto and add a new handler to reinit the engine by
+  //  cleaning up caches
   private ScribuntoLuaEngine(IWikiModel model, CompiledScriptCache compiledScriptCache,
       Globals globals) {
     super(model);
@@ -196,6 +201,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     stubExecuteModule();
     stubWikiBase();
     stubRequire();
+    stubLoadData();
   }
 
   private void stubTitleBlacklist() {
@@ -234,7 +240,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
         final LuaValue mw = globals.get("mw");
 
         if (frame.isnil()) {
-          LuaValue newFrame = mw.get("_newFrame");
+          LuaValue newFrame = mw.get(EXPOSED_NEW_FRAME);
           frame = newFrame.call(LuaString.valueOf("current"), LuaString.valueOf("parent"));
         }
         LuaValue oldGetCurrentFrame = mw.get("getCurrentFrame");
@@ -269,7 +275,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
       @Override
       public LuaValue call(LuaValue chunk) {
         final LuaValue mw = globals.get("mw");
-        LuaValue newFrame = mw.get("_newFrame");
+        LuaValue newFrame = mw.get(EXPOSED_NEW_FRAME);
         LuaValue frame = newFrame.call(LuaString.valueOf("current"), LuaString.valueOf("parent"));
 
         LuaValue oldGetCurrentFrame = mw.get("getCurrentFrame");
@@ -379,6 +385,8 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     globals.set("require", requireStub());
   }
 
+  // Catch require to avoid caching modules that may contain a static pagename (as pagenames changes in our setting
+  // while pagename are static in original scribunto
   private LuaValue requireStub() {
     return new OneArgFunction() {
       @Override
@@ -433,6 +441,32 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     //	end
     //	return _LOADED[modname]
   //end
+
+  private final static String _LOAD_DATA = "_default_loadData";
+
+  private void stubLoadData() {
+    // don't need module isolation
+    final LuaValue mw = globals.get("mw");
+    LuaValue loadData = mw.get("loadData");
+    mw.set(_LOAD_DATA, loadData);
+    mw.set("loadData", loadDataStub());
+  }
+
+  // Catch require to avoid caching modules that may contain a static pagename (as pagenames changes in our setting
+  // while pagename are static in original scribunto
+  private LuaValue loadDataStub() {
+    return new OneArgFunction() {
+      @Override
+      public LuaValue call(LuaValue module) {
+        final LuaValue mw = globals.get("mw");
+        LuaValue data = mw.get(_LOAD_DATA).call(module);
+        LuaTable cache = mw.get(EXPOSED_LOADED_DATA).checktable();
+        // Just invalidate the cached data
+        cache.set(module, LuaValue.NIL);
+        return data;
+      }
+    };
+  }
 
   private void load(MwInterface luaInterface) throws IOException {
     final String filename = fileNameForInterface(luaInterface);
@@ -862,6 +896,11 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
       this.delegate = delegate;
     }
 
+    private static final String RETURN_MW_AFTER_EXPOSURE = //
+            "mw." + EXPOSED_NEW_FRAME + " = newFrame\n" +
+                    "mw." + EXPOSED_LOADED_DATA +" = loadedData\n" +
+            "\nreturn mw";
+    // Patch mw code so that newFrame is exposed (and then stubbed) and loadedData cache is not used anymore
     private InputStream patchMw(InputStream is) {
       assert is != null;
       try {
@@ -873,7 +912,7 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
         }
         StringBuilder mwLuaCode = new StringBuilder(result.toString("UTF-8"));
         int returnPos = mwLuaCode.lastIndexOf("return mw");
-        mwLuaCode.replace(returnPos, returnPos + "return mw".length(), "mw._newFrame = newFrame\n\nreturn mw");
+        mwLuaCode.replace(returnPos, returnPos + "return mw".length(), RETURN_MW_AFTER_EXPOSURE);
         return new ByteArrayInputStream(mwLuaCode.toString().getBytes());
       } catch (IOException e) {
         return null;
