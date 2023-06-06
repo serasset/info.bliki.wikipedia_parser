@@ -135,7 +135,6 @@ public interface IWikiModel extends IConfiguration {
      * ending with gif, png, jpg, bmp)
      *
      * @param imageSrc
-     * @param hashSection
      * @param imageAltText
      */
     void appendExternalImageLink(String imageSrc, String imageAltText);
@@ -170,7 +169,7 @@ public interface IWikiModel extends IConfiguration {
      *            the unparsed header string
      * @param headLevel
      *            level of header (i.e. h1, h2, h3, h4, 5h,..)
-     * @param noToc
+     * @param noToC
      *            don't show the &quot;table of content&quot;
      * @param headCounter
      *            the total number of headers parsed
