@@ -1334,6 +1334,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
             return;
         }
         fPageTitle = pageTitle;
+        // current engine belongs to another page, get rid of it as it contains caches that are invalid now
+        fScribuntoEngine = null;
         // Invalidate all call caches as they may depend on the current pageTitle and caching breaks reusability
         if (null != this.getTemplateCallsCache())
             this.getTemplateCallsCache().clear();
@@ -1586,6 +1588,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
             if (newNamespaceName.equals(fNamespaceName)) return;
             fNamespaceName = newNamespaceName;
         }
+        // current engine belongs to another page, get rid of it
+        fScribuntoEngine = null;
         // Invalidate all call caches as they may depend on the current pageTitle and caching breaks reusability
         if (null != this.getTemplateCallsCache())
             this.getTemplateCallsCache().clear();
@@ -1634,8 +1638,11 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 
     @Override
     public ScribuntoEngine createScribuntoEngine() {
-        if (null == fScribuntoEngine)
-            fScribuntoEngine = new ScribuntoLuaEngine(this, compiledScriptCache);
+        if (null == fScribuntoEngine) {
+            Logger scribuntoLog = LoggerFactory.getLogger(ScribuntoEngine.class);
+            fScribuntoEngine =
+                    new ScribuntoLuaEngine(this, compiledScriptCache, scribuntoLog.isDebugEnabled());
+        }
         return fScribuntoEngine;
     }
 }
