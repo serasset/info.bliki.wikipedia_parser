@@ -76,5 +76,11 @@ public class ScribuntoLuaEngineIntegrationTest {
                 .isEqualTo("+ Current Title = second");
     }
 
+    @Test public void test_senseid() throws Exception {
+        wikiModel.setPageName("first");
 
+        assertThat(wikiModel.render(new HTMLConverter(), "{{senseid}}").trim())
+                .isEqualTo("<p><span class=\"etymid\" id=\"English:_test\" /></p>");
+
+    }
 }

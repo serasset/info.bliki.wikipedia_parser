@@ -284,10 +284,9 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
           globals.get("math").get("randomseed").checkfunction().call(LuaInteger.valueOf(1));
         }
         executeFunctionDepth++;
-        final LuaValue res = chunk.call(frame);
+        final LuaTable resTable = LuaTable.listOf(null, chunk.invoke(frame));
         StringBuilder buf = new StringBuilder();
-        if (res.istable()) {
-          LuaTable table = res.checktable();
+          LuaTable table = resTable.checktable();
           LuaValue k = LuaValue.NIL;
           while (true) {
             Varargs n = table.next(k);
@@ -295,11 +294,8 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
               break;
             }
             LuaValue v = n.arg(2);
-            buf.append(v.tojstring());
+            buf.append(globals.get("tostring").call(v).tojstring());
           }
-        } else if (! res.isnil()) {
-          buf.append(res.tojstring());
-        }
 
         executeFunctionDepth--;
         mw.set("getCurrentFrame", oldGetCurrentFrame);
