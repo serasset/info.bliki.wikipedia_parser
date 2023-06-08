@@ -16,6 +16,7 @@ public class WPATag extends HTMLTag {
 
     public WPATag() {
         super("a");
+        fMayBeEmpty = true;
     }
 
     @Override

@@ -38,8 +38,15 @@ public class HTMLTag extends TagNode {
         }
     }
 
+    protected boolean fMayBeEmpty;
+
     public HTMLTag(String name) {
+        this(name, false);
+    }
+
+    public HTMLTag(String name, boolean maybeEmpty) {
         super(name);
+        fMayBeEmpty = maybeEmpty;
     }
 
     public void appendAttributes(Appendable buf, Map<String, String> tagAtttributes) throws IOException {
@@ -53,8 +60,8 @@ public class HTMLTag extends TagNode {
         String name = node.getName();
         List<Object> children = node.getChildren();
         if (children.size() == 0) {
-            // don't render empty tags (see Issue98)
-            if (!name.equals("a")) {
+            // don't render empty tags unless they allow empty content (a and span may bear anchors) (see Issue98)
+            if (!fMayBeEmpty) {
                 // because of section tags allow <a href=\"#Section..." />
                 return;
             }

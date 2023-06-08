@@ -113,18 +113,6 @@ public class TagNode extends TagToken implements PlainTextConvertable {
         return attributes;
     }
 
-    /**
-     * Get a special object for this TagNode which contains original information
-     * from the parsed wiki object (for example the ImageFormat or original wiki
-     * topic string).
-     *
-     * @param attName
-     *          the attribute name
-     * @param attValue
-     *          the attribute value
-     * @see #addObjectAttribute(String, Object)
-     * @see info.bliki.wiki.model.ImageFormat
-     */
     public Map<String, Object> getObjectAttributes() {
         return objectAttributes;
     }

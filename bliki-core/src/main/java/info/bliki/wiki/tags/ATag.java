@@ -10,6 +10,7 @@ import java.util.List;
 public class ATag extends HTMLTag {
     public ATag() {
         super("a");
+        fMayBeEmpty = true;
     }
 
     @Override

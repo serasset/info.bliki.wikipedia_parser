@@ -138,7 +138,7 @@ public class Configuration implements IConfiguration {
     public static final  HTMLTag HTML_FONT_OPEN = new HTMLTag("font");
     public static final  HTMLTag HTML_CITE_OPEN = new HTMLTag("cite");
     public static final  HTMLTag HTML_DIV_OPEN = new HTMLBlockTag("div", SPECIAL_BLOCK_TAGS);
-    public static final  HTMLTag HTML_SPAN_OPEN = new HTMLTag("span");
+    public static final  HTMLTag HTML_SPAN_OPEN = new HTMLTag("span", true);
     public static final  HTMLTag HTML_VAR_OPEN = new HTMLTag("var");
     public static final  HTMLTag HTML_CODE_OPEN = new HTMLTag("code");
 
