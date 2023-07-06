@@ -172,7 +172,7 @@ public class MwLanguage implements MwInterface {
         return new ZeroArgFunction() {
             @Override
             public LuaValue call() {
-                return toLuaString("en");
+                return toLuaString(wikiModel.getLocale().getLanguage());
             }
         };
     }
