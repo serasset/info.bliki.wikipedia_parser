@@ -19,13 +19,17 @@ final class Languages {
      */
     public String getName(String code, String inLanguage) {
         Locale l = new Locale(code);
+        String result;
         if (inLanguage == null) {
             // Autonym case
-            return l.getDisplayLanguage(l);
+            result = l.getDisplayLanguage(l);
         } else {
-            return l.getDisplayLanguage(new Locale(inLanguage));
+            result = l.getDisplayLanguage(new Locale(inLanguage));
         }
-        // return codes.get(code);
+        if (code.equals(result)) {
+            result = l.getDisplayLanguage(Locale.ENGLISH);
+        }
+        return result;
     }
 
 
