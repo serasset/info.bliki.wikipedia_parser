@@ -18,7 +18,7 @@ final class Languages {
      * @return string: Language name or empty
      */
     public String getName(String code, String inLanguage) {
-        Locale l = new Locale(code);
+        Locale l = Locale.forLanguageTag(code);
         String result;
         if (inLanguage == null) {
             // Autonym case
