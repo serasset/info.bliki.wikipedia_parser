@@ -678,8 +678,12 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
     return new OneArgFunction() {
       @Override
       public LuaValue call(LuaValue packageName) {
-        return loadModule(
-            pageNameForModule(packageName.tojstring(), model.getNamespace().getMain()));
+        try {
+          return loadModule(
+                  pageNameForModule(packageName.tojstring(), model.getNamespace().getMain()));
+        } catch (LuaError e) {
+          return NIL;
+        }
       }
     };
   }
