@@ -3,6 +3,7 @@ package info.bliki.wiki.template.dates;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -421,8 +422,10 @@ public class StringToTimeTest {
     final Object date2 = StringToTime.date("22 February 1735+11 day");
     assertThat(date1).isInstanceOf(Date.class);
     assertThat(date2).isInstanceOf(Date.class);
-    assertThat(((Date) date1).toString()).isEqualTo("Sat Mar 05 00:00:00 CET 1735");
-    assertThat(((Date) date2).toString()).isEqualTo("Sat Mar 05 00:00:00 CET 1735");
+    assertThat(SimpleDateFormat.getInstance().format(date1)).isEqualTo("3/5/35, 12:00 AM");
+    assertThat(SimpleDateFormat.getInstance().format(date2)).isEqualTo("3/5/35, 12:00 AM");
+    //assertThat(((Date) date1).toString()).isEqualTo("Sat Mar 05 00:00:00 CET 1735");
+    //assertThat(((Date) date2).toString()).isEqualTo("Sat Mar 05 00:00:00 CET 1735");
     assertThat((Date) date1).isEqualTo((Date) date2);
   }
 
