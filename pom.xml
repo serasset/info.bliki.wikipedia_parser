@@ -4,7 +4,7 @@
     <artifactId>bliki</artifactId>
     <packaging>pom</packaging>
     <name>Bliki POM</name>
-    <version>3.1.12G</version>
+    <version>3.1.13G-SNAPSHOT</version>
     <description>
         The Bliki API is a Java-based Wiki to HTML renderer with MediaWiki syntax support.
     </description>
@@ -72,19 +72,19 @@
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-core</artifactId>
-                <version>3.1.12G</version>
+                <version>3.1.13G-SNAPSHOT</version>
             </dependency>
 
             <!--dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-creator</artifactId>
-                <version>3.1.12G</version>
+                <version>3.1.13G-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>info.bliki.wiki</groupId>
                 <artifactId>bliki-addons</artifactId>
-                <version>3.1.12G</version>
+                <version>3.1.13G-SNAPSHOT</version>
             </dependency-->
 
             <dependency>
@@ -108,7 +108,7 @@
             <dependency>
                 <groupId>org.luaj</groupId>
                 <artifactId>luaj-jse</artifactId>
-                <version>3.0.3-GS</version>
+                <version>3.0.4-GS-SNAPSHOT</version>
             </dependency>
 
             <dependency>
