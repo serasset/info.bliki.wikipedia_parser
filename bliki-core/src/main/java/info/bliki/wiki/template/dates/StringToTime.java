@@ -156,6 +156,9 @@ public class StringToTime extends Date {
       // e.g., 10/26/1981 or 10/26/81
       new PatternAndFormat(Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{2,4}"), new Format("M/d/y")),
 
+      // e.g., "dd.MM.yyyy"
+      new PatternAndFormat(Pattern.compile("\\d{1,2}\\.\\d{1,2}\\.\\d{4}"), new Format("dd.MM.yyyy")),
+
       // e.g., 10-26-1981 or 10-26-81
       new PatternAndFormat(Pattern.compile("\\d{1,2}\\-\\d{1,2}\\-\\d{2,4}"), new Format("M-d-y")),
 

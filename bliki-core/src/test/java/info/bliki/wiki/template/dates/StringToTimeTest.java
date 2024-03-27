@@ -3,7 +3,6 @@ package info.bliki.wiki.template.dates;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -514,6 +513,20 @@ public class StringToTimeTest {
     Calendar ref = Calendar.getInstance();
     ref.setTime(d);
     assertThat(ref.get(Calendar.YEAR)).isEqualTo(1983);
+  }
+
+  @Test
+  public void testWitionaryDate4() throws Exception {
+    // 17.10.1836
+
+    Object date = StringToTime.date("17.10.1836");
+    assertThat(date).isInstanceOf(Date.class);
+    Date d = (Date) date;
+    Calendar ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(1836);
+    assertThat(ref.get(Calendar.MONTH)).isEqualTo(Calendar.OCTOBER);
+    assertThat(ref.get(Calendar.DAY_OF_MONTH)).isEqualTo(17);
   }
 
   private Date now() {
