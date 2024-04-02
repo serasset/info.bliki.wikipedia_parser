@@ -529,6 +529,19 @@ public class StringToTimeTest {
     assertThat(ref.get(Calendar.DAY_OF_MONTH)).isEqualTo(17);
   }
 
+  @Test
+  public void testWitionaryDate5() throws Exception {
+    // 17.10.1836
+
+    Object date = StringToTime.date("January 1875");
+    assertThat(date).isInstanceOf(Date.class);
+    Date d = (Date) date;
+    Calendar ref = Calendar.getInstance();
+    ref.setTime(d);
+    assertThat(ref.get(Calendar.YEAR)).isEqualTo(1875);
+    assertThat(ref.get(Calendar.MONTH)).isEqualTo(Calendar.JANUARY);
+  }
+
   private Date now() {
     return new Date(0);
   }
