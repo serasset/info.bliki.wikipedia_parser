@@ -47,8 +47,10 @@ public class MwTitle implements MwInterface {
         table.set("getFileInfo", getFileInfo());
         table.set("protectionLevels", protectionLevels());
         table.set("cascadingProtection", cascadingProtection());
+        table.set("redirectTarget", redirectTarget());
         table.set("getCurrentTitle", getCurrentTitle());
         table.set("recordVaryFlag", recordVaryFlag());
+        table.set("getPageLangCode", getPageLangCode());
         return table;
     }
 
@@ -120,6 +122,34 @@ public class MwTitle implements MwInterface {
                 LuaTable table = new LuaTable();
                 table.set("restrictions", new LuaTable());
                 return table;
+            }
+        };
+    }
+
+    private LuaValue redirectTarget() {
+        return new OneArgFunction() {
+            /**
+             * @param page
+             * @return Whether the file exists. For File- and Media-namespace titles, this is
+             * expensive. It will also be recorded as an image usage for File- and Media-namespace titles.
+             */
+            @Override
+            public LuaValue call(LuaValue page) {
+                return NIL;
+            }
+        };
+    }
+
+    private LuaValue getPageLangCode() {
+        return new OneArgFunction() {
+            /**
+             * @param page
+             * @return Whether the file exists. For File- and Media-namespace titles, this is
+             * expensive. It will also be recorded as an image usage for File- and Media-namespace titles.
+             */
+            @Override
+            public LuaValue call(LuaValue page) {
+                return NIL;
             }
         };
     }

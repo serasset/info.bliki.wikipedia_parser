@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -138,7 +139,7 @@ public class WikiTestModel extends WikiModel {
             logger.error("loading "+name);
         }
         try (InputStream is = getClass().getResourceAsStream(name)) {
-            return is == null ? null : IOUtils.toString(is);
+            return is == null ? null : IOUtils.toString(is, Charset.defaultCharset());
         } catch (IOException e) {
             logger.error("error loading "+name, e);
             throw new RuntimeException(e);
