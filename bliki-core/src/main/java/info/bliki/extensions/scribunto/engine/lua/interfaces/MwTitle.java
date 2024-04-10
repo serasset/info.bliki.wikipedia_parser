@@ -95,7 +95,7 @@ public class MwTitle implements MwInterface {
     private LuaValue fileExists() {
         return new OneArgFunction() {
             /**
-             * @param page
+             * @param page the title of the page to fetch
              * @return Whether the file exists. For File- and Media-namespace titles, this is
              * expensive. It will also be recorded as an image usage for File- and Media-namespace titles.
              */
