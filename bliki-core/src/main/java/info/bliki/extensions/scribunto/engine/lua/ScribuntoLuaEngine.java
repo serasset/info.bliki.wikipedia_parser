@@ -19,19 +19,14 @@ import info.bliki.wiki.filter.MagicWord;
 import info.bliki.wiki.filter.ParsedPageName;
 import info.bliki.wiki.filter.TemplateParser;
 import info.bliki.wiki.model.IWikiModel;
-import info.bliki.wiki.namespaces.INamespace.INamespaceValue;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
-import info.bliki.wiki.namespaces.Namespace;
-import info.bliki.wiki.namespaces.Namespace.NamespaceValue;
 import info.bliki.wiki.template.ITemplateFunction;
 import info.bliki.wiki.template.namedargs.INamedArgsTemplateFunction;
 import info.bliki.wiki.template.namedargs.NamedArgs;
-import java.io.BufferedInputStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaClosure;
 import org.luaj.vm2.LuaError;
@@ -698,7 +693,8 @@ public class ScribuntoLuaEngine extends ScribuntoEngineBase implements MwInterfa
             loadAndCache(is, chunkName),
             globals);
       } catch (ScribuntoException | IOException e) {
-        logger.error("error loading '" + chunkName + "'", e);
+        logger.error("error loading '" + chunkName + "'");
+        logger.error("  -> caused by {}: {} ", e.getClass().getCanonicalName(), e.getMessage());
         throw new LuaError(e);
       }
     }
