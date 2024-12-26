@@ -129,7 +129,7 @@ public class TemplateParser extends AbstractParser {
 
             return parser.fOnlyIncludeFlag;
         } catch (Exception | Error e) {
-            handleParserError(e, writer);
+            handleParserError(e, wikiModel.getPageName(), writer);
             return false;
         } finally {
             wikiModel.decrementTemplateRecursionLevel();
@@ -206,14 +206,14 @@ public class TemplateParser extends AbstractParser {
             }
             writer.append(sb);
         } catch (Exception | Error e) {
-            handleParserError(e, writer);
+            handleParserError(e, wikiModel.getPageName(), writer);
         } finally {
             wikiModel.decrementTemplateRecursionLevel();
         }
     }
 
-    private static void handleParserError(Throwable e, Appendable writer) {
-        logger.error(TEMPLATE_PARSER_ERROR, e);
+    private static void handleParserError(Throwable e, String pageName, Appendable writer) {
+        logger.error("{} -- {}", TEMPLATE_PARSER_ERROR, pageName, e);
         try {
             writer.append(TEMPLATE_PARSER_ERROR)
                     .append(':')
